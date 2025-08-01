@@ -64,13 +64,22 @@ function renderExpenses() {
     li.className = "border p-2 rounded flex justify-between items-center";
 
     li.innerHTML = `
-      <div>
-        <p class="font-semibold">${item.note}</p>
-        <p class="text-sm text-gray-600">${item.category} | ${item.date}</p>
-      </div>
-      <div class="text-red-600 font-bold">
-        <i class="fas fa-coins text-yellow-500 mr-1"></i>${item.amount}
-      </div>
+     <div>
+    <p class="font-semibold">${item.note}</p>
+    <p class="text-sm text-gray-600">${item.category} | ${item.date}</p>
+  </div>
+  <div class="flex items-center gap-2">
+    <span class="text-red-600 font-bold">
+      <i class="fas fa-coins text-yellow-500 mr-1"></i>${item.amount}
+    </span>
+     <button onclick="deleteExpense(${item.id})" class="text-red-500 hover:text-red-700">
+      <i class="fas fa-edit"></i>
+    </button>
+    <button onclick="deleteExpense(${item.id})" class="text-red-500 hover:text-red-700">
+      <i class="fas fa-trash"></i>
+    </button>
+   
+  </div>
     `;
 
     expenseList.appendChild(li);
@@ -80,3 +89,20 @@ function renderExpenses() {
   const total = expenses.reduce((sum, item) => sum + item.amount, 0);
   totalExpense.innerHTML = `<i class="fas fa-coins text-yellow-500 mr-1"></i>${total}`;
 }
+
+// delete expense
+const deleteExpense = (id) => {
+  if (confirm("Are you sure you want to delete this expense?")) {
+    const updateExpenses = expenses.filter((item) => item.id !== id);
+
+    // new array data
+    expenses.length = 0;
+    expenses.push(...updateExpenses);
+
+    // localStorage update
+    localStorage.setItem("expenses", JSON.stringify(expenses));
+
+    // ui refresh
+    renderExpenses();
+  }
+};
