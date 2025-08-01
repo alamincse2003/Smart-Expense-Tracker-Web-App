@@ -6,10 +6,12 @@ const selectCategory = document.getElementById("category");
 const inputDate = document.getElementById("date");
 const expenseList = document.getElementById("expenseList");
 const totalExpense = document.getElementById("total");
+const submitBtn = document.getElementById("submitBtn");
 
 // data array
 let expenses = [];
-
+let isEditMode = false;
+let editId = null;
 // load from localStorage on page load
 const savedExpenses = JSON.parse(localStorage.getItem("expenses"));
 if (savedExpenses) {
@@ -32,17 +34,40 @@ form.addEventListener("submit", function (e) {
     return;
   }
 
+  if (isEditMode) {
+    //   Update existing
+    const updatedExpenses = expenses.map((item) =>
+      item.id === editId ? { ...item, amount, note, category, date } : item
+    );
+
+    expenses.length = 0;
+    expenses.push(...updatedExpenses);
+    isEditMode = false;
+    editId = null;
+    submitBtn.textContent = "Add Expense";
+  } else {
+    //  Add new
+    const expense = {
+      id: Date.now(),
+      amount,
+      note,
+      category,
+      date,
+    };
+    expenses.push(expense);
+  }
+
   // create expense object
-  const expense = {
-    id: Date.now(),
-    amount,
-    note,
-    category,
-    date,
-  };
+  // const expense = {
+  //   id: Date.now(),
+  //   amount,
+  //   note,
+  //   category,
+  //   date,
+  // };
 
   // add to array
-  expenses.push(expense);
+  // expenses.push(expense);
 
   // localStorage data save
   localStorage.setItem("expenses", JSON.stringify(expenses));
@@ -104,12 +129,16 @@ function editExpense(id) {
     selectCategory.value = expenseToEdit.category;
     inputDate.value = expenseToEdit.date;
 
+    // Set edit mode
+    isEditMode = true;
+    editId = id;
+    submitBtn.textContent = "Update Expense";
     // Remove old expense
-    const updatedExpenses = expenses.filter((item) => item.id !== id);
-    expenses.length = 0;
-    expenses.push(...updatedExpenses);
-    localStorage.setItem("expenses", JSON.stringify(expenses));
-    renderExpenses();
+    // const updatedExpenses = expenses.filter((item) => item.id !== id);
+    // expenses.length = 0;
+    // expenses.push(...updatedExpenses);
+    // localStorage.setItem("expenses", JSON.stringify(expenses));
+    // renderExpenses();
   }
 }
 
