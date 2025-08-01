@@ -72,7 +72,7 @@ function renderExpenses() {
     <span class="text-red-600 font-bold">
       <i class="fas fa-coins text-yellow-500 mr-1"></i>${item.amount}
     </span>
-     <button onclick="deleteExpense(${item.id})" class="text-red-500 hover:text-red-700">
+     <button onclick="editExpense(${item.id})" class="text-red-500 hover:text-red-700">
       <i class="fas fa-edit"></i>
     </button>
     <button onclick="deleteExpense(${item.id})" class="text-red-500 hover:text-red-700">
@@ -90,8 +90,31 @@ function renderExpenses() {
   totalExpense.innerHTML = `<i class="fas fa-coins text-yellow-500 mr-1"></i>${total}`;
 }
 
+// edit expense
+function editExpense(id) {
+  if (confirm("Are you sure you want to edit this expense?")) {
+    const expenseToEdit = expenses.find((item) => item.id === id);
+    if (!expenseToEdit) {
+      return;
+    }
+
+    // field from existing data
+    inputAmount.value = expenseToEdit.amount;
+    inputNote.value = expenseToEdit.note;
+    selectCategory.value = expenseToEdit.category;
+    inputDate.value = expenseToEdit.date;
+
+    // Remove old expense
+    const updatedExpenses = expenses.filter((item) => item.id !== id);
+    expenses.length = 0;
+    expenses.push(...updatedExpenses);
+    localStorage.setItem("expenses", JSON.stringify(expenses));
+    renderExpenses();
+  }
+}
+
 // delete expense
-const deleteExpense = (id) => {
+function deleteExpense(id) {
   if (confirm("Are you sure you want to delete this expense?")) {
     const updateExpenses = expenses.filter((item) => item.id !== id);
 
@@ -105,4 +128,4 @@ const deleteExpense = (id) => {
     // ui refresh
     renderExpenses();
   }
-};
+}
