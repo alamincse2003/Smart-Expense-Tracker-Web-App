@@ -8,8 +8,14 @@ const expenseList = document.getElementById("expenseList");
 const totalExpense = document.getElementById("total");
 
 // data array
-const expenses = [];
+let expenses = [];
 
+// load from localStorage on page load
+const savedExpenses = JSON.parse(localStorage.getItem("expenses"));
+if (savedExpenses) {
+  expenses = savedExpenses;
+  renderExpenses();
+}
 // form submit
 form.addEventListener("submit", function (e) {
   e.preventDefault();
@@ -38,6 +44,8 @@ form.addEventListener("submit", function (e) {
   // add to array
   expenses.push(expense);
 
+  // localStorage data save
+  localStorage.setItem("expenses", JSON.stringify(expenses));
   // show in ui
   renderExpenses();
 
