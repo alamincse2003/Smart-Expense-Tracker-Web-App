@@ -7,6 +7,7 @@ const inputDate = document.getElementById("date");
 const expenseList = document.getElementById("expenseList");
 const totalExpense = document.getElementById("total");
 const submitBtn = document.getElementById("submitBtn");
+const searchInput = document.getElementById("search");
 
 // data array
 let expenses = [];
@@ -79,12 +80,48 @@ form.addEventListener("submit", function (e) {
 });
 
 // Render expenses in the list
-function renderExpenses() {
+// function renderExpenses() {
+
+//   expenseList.innerHTML = "";
+
+//   expenses.forEach((item) => {
+//     const li = document.createElement("li");
+//     li.className = "border p-2 rounded flex justify-between items-center";
+
+//     li.innerHTML = `
+//      <div>
+//     <p class="font-semibold">${item.note}</p>
+//     <p class="text-sm text-gray-600">${item.category} | ${item.date}</p>
+//   </div>
+//   <div class="flex items-center gap-2">
+//     <span class="text-red-600 font-bold">
+//       <i class="fas fa-coins text-yellow-500 mr-1"></i>${item.amount}
+//     </span>
+//      <button onclick="editExpense(${item.id})" class="text-red-500 hover:text-red-700">
+//       <i class="fas fa-edit"></i>
+//     </button>
+//     <button onclick="deleteExpense(${item.id})" class="text-red-500 hover:text-red-700">
+//       <i class="fas fa-trash"></i>
+//     </button>
+
+//   </div>
+//     `;
+
+//     expenseList.appendChild(li);
+//   });
+
+//   // Update total
+//   const total = expenses.reduce((sum, item) => sum + item.amount, 0);
+//   totalExpense.innerHTML = `<i class="fas fa-coins text-yellow-500 mr-1"></i>${total}`;
+// }
+
+// Render expenses in the list with search includes
+function renderExpenses(data = expenses) {
   // Clear previous
   expenseList.innerHTML = "";
 
   // Render each expense
-  expenses.forEach((item) => {
+  data.forEach((item) => {
     const li = document.createElement("li");
     li.className = "border p-2 rounded flex justify-between items-center";
 
@@ -111,7 +148,7 @@ function renderExpenses() {
   });
 
   // Update total
-  const total = expenses.reduce((sum, item) => sum + item.amount, 0);
+  const total = data.reduce((sum, item) => sum + item.amount, 0);
   totalExpense.innerHTML = `<i class="fas fa-coins text-yellow-500 mr-1"></i>${total}`;
 }
 
@@ -158,3 +195,17 @@ function deleteExpense(id) {
     renderExpenses();
   }
 }
+
+// search input field
+searchInput.addEventListener("input", function () {
+  const query = searchInput.value.toLowerCase();
+  const filtered = expenses.filter((item) => {
+    return (
+      item.note.toLowerCase().includes(query) ||
+      item.category.toLowerCase().includes(query) ||
+      item.date.toLowerCase().includes(query)
+    );
+  });
+  renderExpenses(filtered);
+});
+// search input field
