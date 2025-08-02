@@ -11,6 +11,7 @@ const searchInput = document.getElementById("search");
 
 // data array
 let expenses = [];
+let chart = null;
 let isEditMode = false;
 let editId = null;
 // load from localStorage on page load
@@ -150,6 +151,8 @@ function renderExpenses(data = expenses) {
   // Update total
   const total = data.reduce((sum, item) => sum + item.amount, 0);
   totalExpense.innerHTML = `<i class="fas fa-coins text-yellow-500 mr-1"></i>${total}`;
+
+  renderChart();
 }
 
 // edit expense
@@ -209,3 +212,45 @@ searchInput.addEventListener("input", function () {
   renderExpenses(filtered);
 });
 // search input field
+
+// pie chart
+
+function renderChart() {
+  const categoryTotals = {};
+
+  expenses.forEach((item) => {
+    if (categoryTotals[item.category]) {
+      categoryTotals[item.category] += item.amount;
+    } else {
+      categoryTotals[item.category] = item.amount;
+    }
+  });
+
+  const ctx = document.getElementById("expenseChart").getContext("2d");
+
+  if (chart !== null) {
+    chart.destroy();
+  }
+
+  chart = new Chart(ctx, {
+    type: "pie",
+    data: {
+      labels: Object.keys(categoryTotals),
+      datasets: [
+        {
+          label: "Expenses by Category",
+          data: Object.values(categoryTotals),
+          backgroundColor: [
+            "#F87171", // red
+            "#60A5FA", // blue
+            "#34D399", // green
+            "#FBBF24", // yellow
+            "#A78BFA", // purple
+          ],
+        },
+      ],
+    },
+  });
+}
+
+// pie chart
