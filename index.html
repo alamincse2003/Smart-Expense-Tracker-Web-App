@@ -9,7 +9,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
   </head>
-  <body class="bg-gray-100 text-gray-800 min-h-screen p-4">
+  <body class="bg-gray-100 dark:bg-white-800 dark:text-gray-800 min-h-screen p-4">
     <div class="max-w-2xl mx-auto space-y-4">
       <h1 class="text-2xl font-bold text-center">
         <i class="fas fa-wallet text-blue-600 mr-2"></i>
@@ -60,6 +60,7 @@
         >
           Add Expense
         </button>
+
       </form>
       <!-- expense form  -->
 
@@ -80,14 +81,29 @@
        <div class="my-6">
         <h2 class="text-xl font-bold text-center mb-2">📊 Expense Overview</h2>
         <!-- <canvas id="expenseChart" height="200" ></canvas> -->
-        <canvas id="expenseChart" width="400" height="400"></canvas>
+        <canvas id="expenseChart" width="200" height="200"></canvas>
 
        </div>
       <!-- pie chart  -->
+
+       <!-- csv file  -->
+   <button id="exportCSV" class="mt-4 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded">
+   Export as CSV
+</button>
+       <!-- csv file  -->
+
+       <!-- pdf file  -->
+        <button id="exportPDF" class="mt-4 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded">
+  Export as PDF
+</button>
+
+       <!-- pdf file  -->
+
     </div>
     </div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="script.js"></script>
   </body>
 </html>

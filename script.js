@@ -254,3 +254,70 @@ function renderChart() {
 }
 
 // pie chart
+
+// csv file
+document.getElementById("exportCSV").addEventListener("click", () => {
+  const expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+
+  if (expenses.length === 0) {
+    alert(" No expense data to export.");
+    return;
+  }
+
+  const csvRows = [];
+  const headers = Object.keys(expenses[0]);
+  csvRows.push(headers.join(","));
+
+  expenses.forEach((expense) => {
+    const values = headers.map((header) => `"${expense[header]}"`);
+    csvRows.push(values.join(","));
+  });
+
+  const csvString = csvRows.join("\n");
+  const blob = new Blob([csvString], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "expenses.csv";
+  a.click();
+
+  URL.revokeObjectURL(url);
+});
+
+// pdf file
+document.getElementById("exportPDF").addEventListener("click", async () => {
+  const expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+
+  if (expenses.length === 0) {
+    alert(" No data to export.");
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  doc.setFontSize(16);
+  doc.text("Expense Report", 20, 20);
+  doc.setFontSize(12);
+
+  const headers = ["Name", "Amount", "Category", "Date"];
+  const startY = 30;
+  let y = startY;
+
+  doc.text(headers.join(" | "), 20, y);
+  y += 8;
+
+  expenses.forEach((item, index) => {
+    const row = [item.name, item.amount + " Tk", item.category, item.date];
+    doc.text(row.join(" | "), 20, y);
+    y += 8;
+
+    if (y > 270) {
+      doc.addPage();
+      y = 20;
+    }
+  });
+
+  doc.save("expenses.pdf");
+});
